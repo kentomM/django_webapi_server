@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if user.is_authenticated %}
+<p>{{ user.get_username }}でログイン中</p>
+{% else %}
+<p>ログインしていません</p>
+{% endif %}
+{% endblock %}
