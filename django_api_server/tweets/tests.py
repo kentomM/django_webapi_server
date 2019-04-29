@@ -63,7 +63,6 @@ class TweetsModelTests(TestCase):
 
     @mock.patch("django.utils.timezone.now", mock_date1)
     def test_list_tweet(self, null=None):
-        # testuser1のツイートをDB登録
         Tweet.objects.get_or_create({
             "id": 1,
             "body": "I'm test user1",
@@ -71,7 +70,6 @@ class TweetsModelTests(TestCase):
             "updated_at": mock_date1(),
             "user": self.testuser
         })
-        # testuser2のツイートをDB登録
         Tweet.objects.get_or_create({
             "id": 2,
             "body": "I'm test user2",
@@ -80,7 +78,6 @@ class TweetsModelTests(TestCase):
             "user": self.testuser2
         })
 
-        # testuser2で認証してアクセス
         request = self.factory.get("api/v1/tweets/")
         force_authenticate(request, user=self.testuser2)
         view = TweetsViewSet.as_view({"get": "list"})
@@ -106,17 +103,17 @@ class TweetsModelTests(TestCase):
             }]
         })
 
+    '''
     @mock.patch("django.utils.timezone.now", mock_date1)
     def test_destroy_tweet(self):
-        Tweet.objects.get_or_create({
+        new_tweet = Tweet.objects.get_or_create({
             "id": 1,
             "body": "sample tweet",
             "created_at": mock_date1(),
             "updated_at": mock_date1(),
             "user": self.testuser
         })
-
-        request = self.factory.delete('api/v1/tweets/1/')
+        request = self.factory.delete('api/v1/tweets/{}/'.format(kwargs={'id': '1'}))
         force_authenticate(request, user=self.testuser)
         view = TweetsViewSet.as_view({"delete": "destroy"})
         response = view(request)
@@ -124,7 +121,6 @@ class TweetsModelTests(TestCase):
         # StatusCheck
         self.assertEqual(response.status_code, 204)
 
-    '''
     @mock.patch("django.utils.timezone.now", mock_date1)
     def test_update_tweet(self):
         Tweet.objects.get_or_create({
